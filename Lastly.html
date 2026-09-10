@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kennopie</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary: #f9a8d4;
+      --secondary: #c084fc;
+      --accent: #f472b6;
+      --bg: #0a0a12;
+      --card: #12121c;
+      --text: #f3e8ff;
+      --muted: #c4b5fd;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.5s ease;
+    }
+
+    .rgb-name {
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rgbFlow 7s linear infinite;
+    }
+    @keyframes rgbFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    /* ===== FACEBOOK STYLE COVER ===== */
+    .cover-section {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .landscape-box {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      border-radius: 22px;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .landscape-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Silver shining border */
+    .landscape-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      padding: 1.8px;
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.6), 
+        rgba(192,192,192,0.15), 
+        rgba(255,255,255,0.5), 
+        rgba(180,180,200,0.12),
+        rgba(255,255,255,0.4));
+      background-size: 300% 300%;
+      animation: silverShine 6s linear infinite;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Avatar overlapping the cover */
+    .avatar-section {
+      position: absolute;
+      left: 50%;
+      bottom: -75px;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 160px;
+      z-index: 10;
+    }
+
+    .avatar-ring {
+      position: relative;
+      width: 150px;
+      height: 150px;
+    }
+    .avatar-ring::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+      animation: spin 11s linear infinite;
+      z-index: -1;
+    }
+    .avatar-ring::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 50%;
+      border: 2px dashed color-mix(in srgb, var(--primary) 65%, transparent);
+      animation: spin 18s linear infinite reverse;
+      z-index: -1;
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #0a0a12;
+      border: 4px solid #0a0a12;
+      position: relative;
+      z-index: 2;
+    }
+    .avatar-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .avatar-inner img.blurring {
+      filter: blur(12px);
+      opacity: 0;
+      transform: scale(1.08);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes silverShine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    .petal {
+      position: absolute;
+      font-size: 14px;
+      pointer-events: none;
+      z-index: 15;
+      animation: float 4.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 5px var(--primary));
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(12deg); }
+    }
+
+    /* Cards */
+    .m3-card {
+      position: relative;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border-radius: 22px;
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+    .m3-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      padding: 1.5px;
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.55), 
+        rgba(192,192,192,0.15), 
+        rgba(255,255,255,0.45), 
+        rgba(180,180,200,0.12),
+        rgba(255,255,255,0.35));
+      background-size: 300% 300%;
+      animation: silverShine 6s linear infinite;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .m3-card:hover {
+      box-shadow: 0 0 40px color-mix(in srgb, var(--primary) 18%, transparent);
+    }
+
+    .theme-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 50;
+      background: color-mix(in srgb, var(--card) 95%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+      border-radius: 20px;
+      padding: 14px 16px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    .theme-box p {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .theme-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .theme-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .theme-btn:hover { transform: scale(1.2); }
+    .theme-btn.active {
+      border-color: white;
+      transform: scale(1.25);
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 110px;
+      left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      background: var(--card);
+      border: 1px solid var(--primary);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-size: 14px;
+      z-index: 100;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #sakura {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .social-platform {
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .social-platform:hover {
+      color: var(--primary);
+    }
+    .account-list {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    .account-list.open {
+      max-height: 220px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="sakura"></canvas>
+  <div id="toast">Theme changed ✨</div>
+
+  <div class="theme-box">
+    <p>Click / Tap to change theme</p>
+    <div class="theme-buttons">
+      <div class="theme-btn active" style="background: linear-gradient(135deg, #f9a8d4, #c084fc)" data-theme="sakura"></div>
+      <div class="theme-btn" style="background: linear-gradient(135deg, #c084fc, #818cf8)" data-theme="cyber"></div>
+      <div class="theme-btn" style="background: linear-gradient(135deg, #67e8f9, #60a5fa)" data-theme="ocean"></div>
+      <div class="theme-btn" style="background: linear-gradient(135deg, #6ee7b7, #34d399)" data-theme="mint"></div>
+      <div class="theme-btn" style="background: linear-gradient(135deg, #fdba74, #fb7185)" data-theme="sunset"></div>
+    </div>
+  </div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-5 pt-10 pb-32">
+
+    <!-- HERO -->
+    <header class="flex flex-col items-center mb-28">
+      
+      <!-- Name -->
+      <div class="text-center mb-10">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight rgb-name leading-none">
+          KENNOPIE
+        </h1>
+        <p class="mt-3 text-sm tracking-widest" style="color: var(--muted)">he/him</p>
+      </div>
+
+      <!-- Cover + Avatar -->
+      <div class="cover-section">
+        <div class="landscape-box">
+          <img id="bgImg" src="bg-sakura.gif" alt="Landscape">
+        </div>
+
+        <div class="avatar-section">
+          <div class="avatar-ring">
+            <div class="avatar-inner">
+              <img id="avatarImg" src="pfp-sakura.gif" alt="Kennopie">
+            </div>
+          </div>
+
+          <span class="petal" style="top:5px;left:12px">🌸</span>
+          <span class="petal" style="top:20px;right:5px;animation-delay:0.7s">🌸</span>
+          <span class="petal" style="bottom:25px;left:-5px;animation-delay:1.4s">🌸</span>
+          <span class="petal" style="bottom:8px;right:15px;animation-delay:2.1s">🌸</span>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap justify-center gap-2.5 mt-24">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs border" 
+              style="background: color-mix(in srgb, var(--primary) 12%, transparent); border-color: color-mix(in srgb, var(--primary) 30%, transparent); color: var(--primary)">
+          he/him
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs border"
+              style="background: color-mix(in srgb, var(--primary) 12%, transparent); border-color: color-mix(in srgb, var(--primary) 30%, transparent); color: var(--primary)">
+          Developer
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs border"
+              style="background: color-mix(in srgb, var(--primary) 12%, transparent); border-color: color-mix(in srgb, var(--primary) 30%, transparent); color: var(--primary)">
+          Creator
+        </span>
+      </div>
+    </header>
+
+    <!-- BIO -->
+    <div class="grid md:grid-cols-2 gap-6 mb-12">
+      <div class="m3-card p-6">
+        <h2 class="text-xl font-semibold mb-3" style="color: var(--primary)">About Me</h2>
+        <p class="text-[15px] leading-relaxed opacity-90">
+          Take the risk or lose the chance.
+        </p>
+      </div>
+
+      <div>
+        <p class="text-xs mb-1 tracking-wider" style="color: var(--muted)">STATUS</p>
+        <h2 class="text-xl font-semibold mb-4">Real-time Presence</h2>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="m3-card p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="fa-brands fa-discord text-indigo-400"></i>
+              <span class="text-sm font-medium">Discord</span>
+            </div>
+            <div class="text-xs opacity-70 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+              Online
+            </div>
+          </div>
+          <div class="m3-card p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <i class="fa-brands fa-spotify text-green-400"></i>
+              <span class="text-sm font-medium">Spotify</span>
+            </div>
+            <div class="text-xs opacity-70">Not playing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL -->
+    <section class="mb-16">
+      <p class="text-xs tracking-wider mb-1" style="color: var(--muted)">SOCIALS</p>
+      <h2 class="text-2xl font-bold mb-6">Social Media</h2>
+      <div class="m3-card p-6 space-y-4">
+        <div>
+          <div class="social-platform flex items-center gap-3 text-lg font-medium" onclick="toggleAccounts('tiktok')">
+            <i class="fa-brands fa-tiktok"></i> TikTok
+            <i class="fa-solid fa-chevron-down text-xs ml-auto opacity-60"></i>
+          </div>
+          <div id="tiktok" class="account-list pl-8 mt-2 space-y-1 text-sm opacity-80">
+            <a href="https://www.tiktok.com/@reinwi" target="_blank" class="block hover:text-white">@reinwi</a>
+            <a href="https://www.tiktok.com/@z4ero9" target="_blank" class="block hover:text-white">@z4ero9</a>
+            <a href="https://www.tiktok.com/@yokimerit" target="_blank" class="block hover:text-white">@yokimerit</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="social-platform flex items-center gap-3 text-lg font-medium" onclick="toggleAccounts('instagram')">
+            <i class="fa-brands fa-instagram"></i> Instagram
+            <i class="fa-solid fa-chevron-down text-xs ml-auto opacity-60"></i>
+          </div>
+          <div id="instagram" class="account-list pl-8 mt-2 space-y-1 text-sm opacity-80">
+            <a href="https://www.instagram.com/kennopichie" target="_blank" class="block hover:text-white">@kennopichie</a>
+            <a href="https://www.instagram.com/appr3hention" target="_blank" class="block hover:text-white">@appr3hention</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="social-platform flex items-center gap-3 text-lg font-medium" onclick="toggleAccounts('facebook')">
+            <i class="fa-brands fa-facebook"></i> Facebook
+            <i class="fa-solid fa-chevron-down text-xs ml-auto opacity-60"></i>
+          </div>
+          <div id="facebook" class="account-list pl-8 mt-2 space-y-1 text-sm opacity-80">
+            <a href="https://www.facebook.com/share/188xEXt6PB/" target="_blank" class="block hover:text-white">Account 1</a>
+            <a href="https://www.facebook.com/share/167grHHLAxP/" target="_blank" class="block hover:text-white">Account 2</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="social-platform flex items-center gap-3 text-lg font-medium" onclick="toggleAccounts('github')">
+            <i class="fa-brands fa-github"></i> GitHub
+            <i class="fa-solid fa-chevron-down text-xs ml-auto opacity-60"></i>
+          </div>
+          <div id="github" class="account-list pl-8 mt-2 space-y-1 text-sm opacity-80">
+            <a href="https://github.com/reversiaxp" target="_blank" class="block hover:text-white">reversiaxp</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="social-platform flex items-center gap-3 text-lg font-medium" onclick="toggleAccounts('discord')">
+            <i class="fa-brands fa-discord"></i> Discord
+            <i class="fa-solid fa-chevron-down text-xs ml-auto opacity-60"></i>
+          </div>
+          <div id="discord" class="account-list pl-8 mt-2 space-y-1 text-sm opacity-80">
+            <a href="https://discord.com/users/1027176871105921086" target="_blank" class="block hover:text-white">Visit Profile</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="text-center text-xs opacity-40 py-10">
+    <p>Kennopie · Take the risk or lose the chance.</p>
+  </footer>
+
+  <script>
+    const themes = {
+      sakura: {
+        primary: '#f9a8d4', secondary: '#c084fc', accent: '#f472b6',
+        bg: '#0f0a12', card: '#1a121c', text: '#fce7f3', muted: '#f9a8d4',
+        pfp: 'pfp-sakura.gif', bgImg: 'bg-sakura.gif'
+      },
+      cyber: {
+        primary: '#c084fc', secondary: '#818cf8', accent: '#a78bfa',
+        bg: '#0a0a14', card: '#13131f', text: '#e0e7ff', muted: '#a5b4fc',
+        pfp: 'pfp-cyber.gif', bgImg: 'bg-cyber.gif'
+      },
+      ocean: {
+        primary: '#67e8f9', secondary: '#60a5fa', accent: '#38bdf8',
+        bg: '#070b14', card: '#0f172a', text: '#e0f2fe', muted: '#7dd3fc',
+        pfp: 'pfp-ocean.gif', bgImg: 'bg-ocean.gif'
+      },
+      mint: {
+        primary: '#6ee7b7', secondary: '#34d399', accent: '#2dd4bf',
+        bg: '#071210', card: '#0f1f1a', text: '#ecfdf5', muted: '#6ee7b7',
+        pfp: 'pfp-mint.gif', bgImg: 'bg-mint.gif'
+      },
+      sunset: {
+        primary: '#fdba74', secondary: '#fb7185', accent: '#f97316',
+        bg: '#120a0a', card: '#1c1212', text: '#fff7ed', muted: '#fdba74',
+        pfp: 'pfp-sunset.gif', bgImg: 'bg-sunset.gif'
+      }
+    };
+
+    const avatarImg = document.getElementById('avatarImg');
+    const bgImg = document.getElementById('bgImg');
+
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const theme = btn.dataset.theme;
+        const t = themes[theme];
+
+        Object.keys(t).forEach(key => {
+          if (key !== 'pfp' && key !== 'bgImg') {
+            document.documentElement.style.setProperty(`--${key}`, t[key]);
+          }
+        });
+
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        avatarImg.classList.add('blurring');
+        bgImg.style.opacity = '0.4';
+
+        setTimeout(() => {
+          avatarImg.src = t.pfp;
+          bgImg.src = t.bgImg;
+          avatarImg.classList.remove('blurring');
+          bgImg.style.opacity = '1';
+        }, 280);
+
+        const toast = document.getElementById('toast');
+        toast.textContent = `Theme → ${theme.charAt(0).toUpperCase() + theme.slice(1)} ✨`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    });
+
+    function toggleAccounts(id) {
+      document.getElementById(id).classList.toggle('open');
+    }
+
+    // Sakura
+    const canvas = document.getElementById('sakura');
+    const ctx = canvas.getContext('2d');
+    let petals = [];
+    function resize() {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+    }
+    addEventListener('resize', resize);
+    resize();
+
+    class Petal {
+      constructor() { this.reset(true); }
+      reset(init = false) {
+        this.x = Math.random() * canvas.width;
+        this.y = init ? Math.random() * canvas.height : -20;
+        this.size = 6 + Math.random() * 10;
+        this.speed = 0.7 + Math.random() * 1.6;
+        this.angle = Math.random() * 6.28;
+        this.spin = (Math.random() - 0.5) * 0.04;
+        this.opacity = 0.3 + Math.random() * 0.5;
+      }
+      update() {
+        this.y += this.speed;
+        this.x += Math.sin(this.angle) * 0.5;
+        this.angle += this.spin;
+        if (this.y > canvas.height + 30) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.size * 0.55, this.size, 0, 0, 6.28);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+    for (let i = 0; i < 35; i++) petals.push(new Petal());
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      petals.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
